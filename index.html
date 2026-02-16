@@ -1,29 +1,649 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>お菓子屋さん</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Portfolio</title>
+  <meta name="description" content="HTML/CSS/JSの基礎が学べる本格1ページサイトのサンプル" />
+<link rel="stylesheet" href="style.css">
+
+  <style>
+    :root{
+      --bg:#0b1020;
+      --panel:#121a33;
+      --text:#e7ecff;
+      --muted:#b7c0ff;
+      --line:rgba(255,255,255,.14);
+      --accent:#7aa2ff;
+      --shadow:0 18px 45px rgba(0,0,0,.35);
+      --radius:16px;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, "Segoe UI", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+      background:
+        radial-gradient(1200px 600px at 10% 10%, rgba(122,162,255,.18), transparent 55%),
+        radial-gradient(900px 500px at 90% 20%, rgba(122,255,214,.10), transparent 60%),
+        var(--bg);
+      color:var(--text);
+      line-height:1.7;
+    }
+
+    a{ color:inherit; text-decoration:none; }
+    img{ max-width:100%; display:block; }
+
+    .container{
+      width:min(1100px, 92vw);
+      margin-inline:auto;
+    }
+
+    /* header */
+    header{
+      position:sticky;
+      top:0;
+      z-index:10;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(to bottom, rgba(11,16,32,.92), rgba(11,16,32,.55));
+      border-bottom:1px solid var(--line);
+    }
+    .nav{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:14px 0;
+    }
+    .brand{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      font-weight:700;
+      letter-spacing:.3px;
+    }
+    .logo{
+      width:34px;
+      height:34px;
+      border-radius:10px;
+      background: linear-gradient(135deg, rgba(122,162,255,.95), rgba(122,255,214,.65));
+      box-shadow: 0 10px 25px rgba(122,162,255,.22);
+    }
+
+    nav ul{
+      list-style:none;
+      display:flex;
+      gap:18px;
+      padding:0;
+      margin:0;
+      align-items:center;
+    }
+    .navlink{
+      opacity:.9;
+      padding:8px 10px;
+      border-radius:10px;
+      transition: .15s ease;
+    }
+    .navlink:hover{ background: rgba(255,255,255,.06); opacity:1; }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:10px 14px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+      cursor:pointer;
+      transition:.15s ease;
+      user-select:none;
+    }
+    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.09); }
+    .btn:active{ transform: translateY(0px); }
+
+    .btn-primary{
+      border-color: rgba(122,162,255,.55);
+      background: rgba(122,162,255,.18);
+    }
+
+    .hamburger{
+      display:none;
+      width:44px;
+      height:44px;
+      border-radius:12px;
+    }
+
+    /* mobile menu */
+    .mobile{
+      display:none;
+      padding-bottom:14px;
+    }
+    .mobile.open{ display:block; }
+    .mobile a{
+      display:block;
+      padding:12px 10px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      margin-top:10px;
+    }
+
+    /* hero */
+    .hero{
+      padding:64px 0 30px;
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:26px;
+      align-items:start;
+    }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .hero-card{
+      padding:28px;
+    }
+    h1{
+      margin:0 0 10px;
+      font-size: clamp(28px, 4vw, 46px);
+      line-height:1.15;
+      letter-spacing:.2px;
+    }
+    .lead{
+      margin:0 0 18px;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+    .hero-actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top: 18px;
+    }
+    .pillrow{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top: 18px;
+    }
+    .pill{
+      font-size:.9rem;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+    }
+
+    /* side panel */
+    .side{
+      padding:22px;
+    }
+    .side h2{
+      margin:0 0 10px;
+      font-size:1.05rem;
+      color: var(--muted);
+      font-weight:600;
+      letter-spacing:.2px;
+    }
+    .stat{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.18);
+      margin-top:10px;
+    }
+    .stat b{ font-size:1.1rem; }
+    .progress{
+      margin-top: 14px;
+      height:10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.09);
+      overflow:hidden;
+      border:1px solid var(--line);
+    }
+    .progress > div{
+      height:100%;
+      width: 0%;
+      background: linear-gradient(90deg, rgba(122,162,255,.95), rgba(122,255,214,.75));
+      transition: width .35s ease;
+    }
+
+    /* sections */
+    section{
+      padding: 42px 0;
+    }
+    .section-title{
+      display:flex;
+      align-items:end;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom: 14px;
+    }
+    .section-title h2{
+      margin:0;
+      font-size:1.35rem;
+      letter-spacing:.2px;
+    }
+    .section-title p{
+      margin:0;
+      color: var(--muted);
+    }
+    .grid3{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:14px;
+    }
+    .feature{
+      padding:18px;
+    }
+    .feature h3{
+      margin:0 0 6px;
+      font-size:1.05rem;
+    }
+    .feature p{
+      margin:0;
+      color: var(--muted);
+    }
+
+    /* projects */
+    .projects{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap:14px;
+    }
+    .project{
+      padding:18px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .tagrow{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .tag{
+      font-size:.85rem;
+      padding:6px 9px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      color: var(--muted);
+      background: rgba(255,255,255,.03);
+    }
+
+    /* contact */
+    form{
+      display:grid;
+      gap:12px;
+    }
+    label{
+      display:grid;
+      gap:6px;
+      color: var(--muted);
+      font-size:.95rem;
+    }
+    input, textarea{
+      padding:12px 12px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.20);
+      color: var(--text);
+      outline:none;
+    }
+    input:focus, textarea:focus{
+      border-color: rgba(122,162,255,.7);
+      box-shadow: 0 0 0 4px rgba(122,162,255,.12);
+    }
+    textarea{ min-height: 120px; resize: vertical; }
+
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      background: rgba(18,26,51,.92);
+      border:1px solid var(--line);
+      border-radius: 999px;
+      padding: 10px 14px;
+      box-shadow: var(--shadow);
+      display:none;
+    }
+    .toast.show{ display:block; }
+
+    footer{
+      padding: 34px 0 44px;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      margin-top: 30px;
+    }
+
+    /* responsive */
+    @media (max-width: 860px){
+      .hero-grid{ grid-template-columns: 1fr; }
+      .grid3{ grid-template-columns: 1fr; }
+      .projects{ grid-template-columns: 1fr; }
+      nav ul{ display:none; }
+      .hamburger{ display:inline-flex; }
+    }
+  </style>
 </head>
+
 <body>
-  <div class="container">
-    <h1>〇〇お菓子店</h1>
-    <p>手作り焼き菓子のお店です。</p>
+  <header>
+    <div class="container">
+      <div class="nav">
+        <a class="brand" href="#top" aria-label="ホームに戻る">
+          <span class="logo" aria-hidden="true"></span>
+          <span>My Portfolio</span>
+        </a>
 
-    <h2>商品一覧</h2>
-    <ul>
-      <li>クッキー</li>
-      <li>マドレーヌ</li>
-      <li>シフォンケーキ</li>
-    </ul>
+        <nav aria-label="サイト内ナビゲーション">
+          <ul>
+            <li><a class="navlink" href="#features">特徴</a></li>
+            <li><a class="navlink" href="#projects">制作例</a></li>
+            <li><a class="navlink" href="#contact">お問い合わせ</a></li>
+          </ul>
+        </nav>
 
-    <a href="#">お問い合わせはこちら</a>
+        <button class="btn hamburger" id="menuBtn" aria-expanded="false" aria-controls="mobileMenu">
+          ☰
+          <span class="sr-only">メニュー</span>
+        </button>
+      </div>
 
-    <script>
-      alert("ようこそ！");
-    </script>
-  </div>
+      <div class="mobile" id="mobileMenu">
+        <a href="#features">特徴</a>
+        <a href="#projects">制作例</a>
+        <a href="#contact">お問い合わせ</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top" class="container">
+    <section class="hero">
+      <div class="hero-grid">
+        <div class="card hero-card">
+          <h1>HTML / CSS / JavaScript を<br/>“動くサイト”で学ぶ</h1>
+          <p class="lead">
+            これは学習用の本格サンプルです。レスポンシブ、ナビ、フォーム、UIの動きまで全部入り。
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#projects">制作例を見る</a>
+            <button class="btn" id="themeBtn" type="button">🌙 テーマ切替</button>
+          </div>
+
+          <div class="pillrow" aria-label="このページで学べる要素">
+            <span class="pill">セマンティックHTML</span>
+            <span class="pill">Flex/Grid</span>
+            <span class="pill">レスポンシブ</span>
+            <span class="pill">DOM操作</span>
+            <span class="pill">フォーム処理</span>
+          </div>
+        </div>
+
+        <aside class="card side" aria-label="進捗パネル">
+          <h2>学習ミッション</h2>
+
+          <div class="stat">
+            <span>今日の目標</span>
+            <b id="goalText">まず動かす</b>
+          </div>
+
+          <div class="stat">
+            <span>チェック数</span>
+            <b><span id="doneCount">0</span> / 3</b>
+          </div>
+
+          <div class="progress" aria-label="進捗バー">
+            <div id="bar"></div>
+          </div>
+
+          <div class="pillrow" style="margin-top:14px;">
+            <button class="btn" id="check1" type="button">① メニュー開閉</button>
+            <button class="btn" id="check2" type="button">② スクロール移動</button>
+            <button class="btn" id="check3" type="button">③ フォーム送信</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="features">
+      <div class="section-title">
+        <h2>特徴</h2>
+        <p>HTML・CSS・JSの基本を、1ページで全部触る</p>
+      </div>
+
+      <div class="grid3">
+        <article class="card feature">
+          <h3>セマンティックHTML</h3>
+          <p>header / nav / main / section / article / footer で構造をきれいに。</p>
+        </article>
+
+        <article class="card feature">
+          <h3>CSS設計の基本</h3>
+          <p>変数（:root）と共通クラス（.container, .card）で管理しやすく。</p>
+        </article>
+
+        <article class="card feature">
+          <h3>JavaScriptでUI操作</h3>
+          <p>DOM取得、イベント、クラス切替、フォーム送信の処理を実装。</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="projects">
+      <div class="section-title">
+        <h2>制作例</h2>
+        <p>カードUI＋タグ＋ボタンの定番パターン</p>
+      </div>
+
+      <div class="projects">
+        <article class="card project">
+          <h3>プロジェクトA：シンプルLP</h3>
+          <p class="lead" style="margin:0;color:var(--muted);font-size:1rem;">
+            見た目は整っていて軽い。学習にも実務にも近い構成。
+          </p>
+          <div class="tagrow">
+            <span class="tag">Responsive</span>
+            <span class="tag">Hero</span>
+            <span class="tag">CTA</span>
+          </div>
+          <button class="btn" type="button" data-toast="プロジェクトAを開く（仮）">詳細（デモ）</button>
+        </article>
+
+        <article class="card project">
+          <h3>プロジェクトB：お問い合わせページ</h3>
+          <p class="lead" style="margin:0;color:var(--muted);font-size:1rem;">
+            フォームの入力→送信→完了表示までの流れを学べる。
+          </p>
+          <div class="tagrow">
+            <span class="tag">Form</span>
+            <span class="tag">Validation</span>
+            <span class="tag">DOM</span>
+          </div>
+          <a class="btn btn-primary" href="#contact">フォームへ</a>
+        </article>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="section-title">
+        <h2>お問い合わせ</h2>
+        <p>送信すると“それっぽい完了”が出ます（学習用）</p>
+      </div>
+
+      <div class="card" style="padding:18px;">
+        <form id="contactForm" novalidate>
+          <label>
+            お名前
+            <input id="name" name="name" type="text" placeholder="例：ねまつ" autocomplete="name" required />
+          </label>
+
+          <label>
+            メール
+            <input id="email" name="email" type="email" placeholder="example@mail.com" autocomplete="email" required />
+          </label>
+
+          <label>
+            内容
+            <textarea id="message" name="message" placeholder="相談内容を書いてください" required></textarea>
+          </label>
+
+          <button class="btn btn-primary" type="submit">送信</button>
+          <p id="formHint" style="margin:0;color:var(--muted);font-size:.95rem;"></p>
+        </form>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <small>© <span id="year"></span> My Portfolio — 学習用サンプル</small>
+      </div>
+    </footer>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // ===== 1) 便利関数（短く書くため）=====
+    const $ = (selector) => document.querySelector(selector);
+
+    // ===== 2) 年号を自動で入れる =====
+    $("#year").textContent = new Date().getFullYear();
+
+    // ===== 3) モバイルメニュー開閉 =====
+    const menuBtn = $("#menuBtn");
+    const mobileMenu = $("#mobileMenu");
+
+    menuBtn.addEventListener("click", () => {
+      const isOpen = mobileMenu.classList.toggle("open");
+      menuBtn.setAttribute("aria-expanded", String(isOpen));
+    });
+
+    // メニュー内リンクを押したら閉じる（スマホで便利）
+    mobileMenu.addEventListener("click", (e) => {
+      if (e.target.tagName === "A") {
+        mobileMenu.classList.remove("open");
+        menuBtn.setAttribute("aria-expanded", "false");
+      }
+    });
+
+    // ===== 4) スムーズスクロール（リンク移動を滑らかに）=====
+    document.addEventListener("click", (e) => {
+      const a = e.target.closest("a[href^='#']");
+      if (!a) return;
+
+      const id = a.getAttribute("href");
+      const target = document.querySelector(id);
+      if (!target) return;
+
+      e.preventDefault();
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    // ===== 5) トースト（小さい通知）=====
+    const toast = $("#toast");
+    let toastTimer = null;
+
+    function showToast(text){
+      toast.textContent = text;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+
+    // data-toast を持つボタンを押したらトースト表示
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-toast]");
+      if (!btn) return;
+      showToast(btn.dataset.toast);
+    });
+
+    // ===== 6) テーマ切替（学習：クラス切替）=====
+    const themeBtn = $("#themeBtn");
+    let dark = true;
+
+    themeBtn.addEventListener("click", () => {
+      dark = !dark;
+
+      // CSS変数をJSで上書きして雰囲気を変える
+      document.documentElement.style.setProperty("--bg", dark ? "#0b1020" : "#f7f9ff");
+      document.documentElement.style.setProperty("--panel", dark ? "#121a33" : "#ffffff");
+      document.documentElement.style.setProperty("--text", dark ? "#e7ecff" : "#0b1020");
+      document.documentElement.style.setProperty("--muted", dark ? "#b7c0ff" : "#44507a");
+      document.documentElement.style.setProperty("--line", dark ? "rgba(255,255,255,.14)" : "rgba(0,0,0,.12)");
+
+      showToast(dark ? "🌙 ダークテーマ" : "☀️ ライトテーマ");
+    });
+
+    // ===== 7) ミッション（進捗バーの学習用）=====
+    const bar = $("#bar");
+    const doneCount = $("#doneCount");
+    const goalText = $("#goalText");
+
+    const done = new Set();
+
+    function updateProgress(){
+      doneCount.textContent = String(done.size);
+      bar.style.width = `${(done.size / 3) * 100}%`;
+
+      if (done.size === 0) goalText.textContent = "まず動かす";
+      if (done.size === 1) goalText.textContent = "仕組みを理解";
+      if (done.size === 2) goalText.textContent = "自分で改造";
+      if (done.size === 3) goalText.textContent = "完成！";
+    }
+
+    function markDone(key){
+      done.add(key);
+      updateProgress();
+    }
+
+    $("#check1").addEventListener("click", () => { markDone("menu"); showToast("① メニューOK"); });
+    $("#check2").addEventListener("click", () => { markDone("scroll"); showToast("② スクロールOK"); });
+    $("#check3").addEventListener("click", () => { markDone("form"); showToast("③ 送信OK"); });
+
+    updateProgress();
+
+    // ===== 8) フォーム送信（基礎バリデーション）=====
+    const form = $("#contactForm");
+    const hint = $("#formHint");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const name = $("#name").value.trim();
+      const email = $("#email").value.trim();
+      const message = $("#message").value.trim();
+
+      if (!name || !email || !message){
+        hint.textContent = "未入力があります。全部入れてください。";
+        showToast("入力チェック：未入力あり");
+        return;
+      }
+
+      if (!email.includes("@")){
+        hint.textContent = "メールの形式が変です（@が必要）。";
+        showToast("入力チェック：メール形式");
+        return;
+      }
+
+      // 学習用：本当はサーバーに送るけど、ここでは成功演出
+      hint.textContent = "送信しました！（学習用の疑似送信）";
+      showToast("送信完了 ✅");
+      form.reset();
+      markDone("form");
+    });
+  </script>
 </body>
-
 </html>
-
